@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Strict.Exceptions\Strict.Exceptions.csproj" />
+    <ProjectReference Include="..\Strict.Expressions\Strict.Expressions.csproj" />
+  </ItemGroup>
+
+</Project>
