@@ -11,9 +11,9 @@ namespace Strict.Compiler
         private const char QuotedStringChar = '\'';
         private const char EscapeChar = '\\';
         private const char CommentChar = '#';
-        private const string Operators = "+-/*=.><|";
-        private const string OperatorStarts = "!";
-        private const string Separators = "()[]{},:;";
+        private static readonly HashSet<char> Operators = new() { '+', '-', '/', '*', '=', '.', '>', '<', '|' };
+        private static readonly HashSet<char> OperatorStarts = new() { '!' };
+        private static readonly HashSet<char> Separators = new() { '(', ')', '[', ']', '{', '}', ',', ':', ';' };
 
         private static readonly HashSet<string> OtherOperators = new()
         {
