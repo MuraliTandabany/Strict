@@ -14,24 +14,13 @@ namespace Strict.Compiler
         private static readonly HashSet<char> Operators = new() { '+', '-', '/', '*', '=', '.', '>', '<', '|' };
         private static readonly HashSet<char> OperatorStarts = new() { '!' };
         private static readonly HashSet<char> Separators = new() { '(', ')', '[', ']', '{', '}', ',', ':', ';' };
-
-        private static readonly HashSet<string> OtherOperators = new()
-        {
-            "**",
-            "<=",
-            ">=",
-            "==",
-            "<>",
-            "!=",
-            "|>",
-            "<|"
-        };
+        private static readonly HashSet<string> OtherOperators = new() { "**", "<=", ">=", "==", "<>", "!=", "|>", "<|" };
 
         private readonly Stack<int> lastChars = new();
-        private int lastIndent = -1;
 
         private readonly TextReader reader;
         private readonly Stack<Token> tokenStack = new();
+        private int lastIndent = -1;
 
         public Lexer(string text) =>
             reader = text == null
@@ -69,12 +58,10 @@ namespace Strict.Compiler
         {
             if (tokenStack.Count != 0)
                 return tokenStack.Pop();
-
-            int ich = NextCharSkipBlanks();
+            var ich = NextCharSkipBlanks();
             if (ich < 0)
                 return null;
-
-            char ch = (char)ich;
+            var ch = (char)ich;
             if (ch == '\n' || ch == '\r')
                 return NextEndOfLine(ch);
             if (char.IsDigit(ch))
@@ -113,7 +100,6 @@ namespace Strict.Compiler
                 PushChar(ich2);
             else
                 value += (char)ich2;
-
             return new Token { TokenType = TokenType.EndOfLine, Value = value };
         }
 
@@ -122,7 +108,7 @@ namespace Strict.Compiler
             var ich2 = NextChar();
             if (ich2 >= 0)
             {
-                char ch2 = (char)ich2;
+                var ch2 = (char)ich2;
                 var op = ch + ch2.ToString();
                 if (OtherOperators.Contains(op))
                     return new Token { TokenType = TokenType.Operator, Value = op };
@@ -146,7 +132,6 @@ namespace Strict.Compiler
             var ich = NextChar();
             if (ich < 0)
                 return new Token { Value = sb.ToString(), TokenType = TokenType.String };
-
             var ch = (char)ich;
             if (ch == endChar)
             {
@@ -210,16 +195,13 @@ namespace Strict.Compiler
             if (ich >= 0 && (char)ich == '.')
                 return NextReal(integer);
             PushChar(ich);
-            var token = new Token();
-            token.Value = integer;
-            token.TokenType = TokenType.Integer;
-            return token;
+            return new Token { Value = integer, TokenType = TokenType.Integer };
         }
 
         private Token NextReal(string integerPart)
         {
             var real = integerPart + ".";
-            int ich = NextChar();
+            var ich = NextChar();
             while (ich >= 0 && char.IsDigit((char)ich))
             {
                 real += (char)ich;
@@ -239,9 +221,7 @@ namespace Strict.Compiler
                 ich = NextChar();
             }
             PushChar(ich);
-            var token = new Token();
-            token.Value = name;
-            token.TokenType = TokenType.Name;
+            var token = new Token { Value = name, TokenType = TokenType.Name };
             if (name == "true" || name == "false")
                 token.TokenType = TokenType.Boolean;
             return token;
@@ -249,7 +229,7 @@ namespace Strict.Compiler
 
         private int NextCharSkipBlanks()
         {
-            int ich = NextChar();
+            var ich = NextChar();
             while (ich >= 0)
             {
                 var ch = (char)ich;
@@ -265,17 +245,16 @@ namespace Strict.Compiler
         private int NextChar()
         {
             var ich = NextSimpleChar();
-            if (ich >= 0 && (char)ich == CommentChar)
-                while (ich >= 0 && (char)ich != '\r' && (char)ich != '\n')
-                    ich = NextSimpleChar();
+            if (ich < 0 || (char)ich != CommentChar)
+                return ich;
+            while (ich >= 0 && (char)ich != '\r' && (char)ich != '\n')
+                ich = NextSimpleChar();
             return ich;
         }
 
-        private int NextSimpleChar()
-        {
-            if (lastChars.Count > 0)
-                return lastChars.Pop();
-            return reader.Read();
-        }
+        private int NextSimpleChar() =>
+            lastChars.Count > 0
+                ? lastChars.Pop()
+                : reader.Read();
     }
 }
