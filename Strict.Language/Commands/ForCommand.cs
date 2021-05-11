@@ -1,4 +1,5 @@
-﻿using Strict.Language.Expressions;
+﻿using System;
+using Strict.Language.Expressions;
 
 namespace Strict.Language.Commands
 {
@@ -15,6 +16,6 @@ namespace Strict.Language.Commands
 			Command = command;
 		}
 
-		public void Visitor(IContext context) => throw new System.NotImplementedException();
+		public void Visitor(IContext context) => throw new NotImplementedException();
 	}
 }

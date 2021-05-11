@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Strict.Language.Expressions;
 
 namespace Strict.Language.Commands
@@ -18,6 +19,6 @@ namespace Strict.Language.Commands
 			BaseExpressions = baseExpressions;
 		}
 
-		public void Visitor(IContext context) => throw new System.NotImplementedException();
+		public void Visitor(IContext context) => throw new NotImplementedException();
 	}
 }

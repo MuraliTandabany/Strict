@@ -15,6 +15,6 @@ namespace Strict.Language.Commands
 			Expression = expression ?? throw new ArgumentNullException(nameof(expression));
 		}
 
-		public void Visitor(IContext context) => throw new System.NotImplementedException();
+		public void Visitor(IContext context) => throw new NotImplementedException();
 	}
 }

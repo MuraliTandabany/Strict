@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Strict.Language.Commands
 {
@@ -10,6 +11,6 @@ namespace Strict.Language.Commands
 		public CompositeCommand(IList<ICommand> commands) => Commands = commands;
 		public void AddCommand(ICommand command) => Commands.Add(command);
 
-		public void Visitor(IContext context) => throw new System.NotImplementedException();
+		public void Visitor(IContext context) => throw new NotImplementedException();
 	}
 }

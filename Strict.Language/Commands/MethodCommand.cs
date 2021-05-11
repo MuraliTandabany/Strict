@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Strict.Exceptions;
 using Strict.Language.Expressions;
@@ -25,6 +26,6 @@ namespace Strict.Language.Commands
 				throw new SyntaxErrorException("non-default argument follows default argument");
 		}
 
-		public void Visitor(IContext context) => throw new System.NotImplementedException();
+		public void Visitor(IContext context) => throw new NotImplementedException();
 	}
 }

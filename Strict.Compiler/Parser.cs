@@ -565,7 +565,7 @@ namespace Strict.Compiler
 				{
 					CompileToken(TokenType.Separator, "]");
 					return indexExpression != null
-						? (IExpression)new IndexedExpression(term, indexExpression)
+						? new IndexedExpression(term, indexExpression)
 						: new SlicedExpression(term, new SliceExpression(null, null));
 				}
 				if (TryCompile(TokenType.Separator, "]"))
