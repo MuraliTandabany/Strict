@@ -1,11 +1,11 @@
 ﻿namespace Strict.Language
 {
-    public enum BinaryOperator
-    {
-        Add,
-        Subtract,
-        Multiply,
-        Divide,
-        Power
-    }
+	public enum BinaryOperator
+	{
+		Add,
+		Subtract,
+		Multiply,
+		Divide,
+		Power
+	}
 }

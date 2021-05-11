@@ -2,8 +2,8 @@
 
 namespace Strict.Compiler
 {
-    public class UnexpectedTokenException : SyntaxErrorException
-    {
-        public UnexpectedTokenException(string text) : base($"Unexpected '{text}'") { }
-    }
+	public class UnexpectedTokenException : SyntaxErrorException
+	{
+		public UnexpectedTokenException(string text) : base($"Unexpected '{text}'") { }
+	}
 }

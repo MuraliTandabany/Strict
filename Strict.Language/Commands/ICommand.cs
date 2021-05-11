@@ -1,4 +1,7 @@
 ﻿namespace Strict.Language.Commands
 {
-    public interface ICommand { }
+	public interface ICommand
+	{
+		void Visitor(IContext context);
+	}
 }
