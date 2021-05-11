@@ -1,8 +1,9 @@
-implement log
+implement Counter
 
-method Write(data)
-    print(data)
+let counter = 0
 
-method WriteLine(data)
-    self.Write(data)
-    self.Write("\n")
+method Increment()
+    counter += 1
+
+method Decrement(data)
+    counter -= 1

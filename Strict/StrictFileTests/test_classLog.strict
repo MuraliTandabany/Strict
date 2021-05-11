@@ -1,0 +1,8 @@
+implement log
+
+method Write(data)
+    print(data)
+
+method WriteLine(data)
+    self.Write(data)
+    self.Write("\n")
