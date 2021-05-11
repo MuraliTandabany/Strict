@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 using Strict.Compiler;
 
@@ -15,7 +16,21 @@ namespace Strict
                 {
                     var parser = new Parser(File.OpenText(file.FullName));
                     var commands = parser.CompileCommandList();
-                    var commandsJsonResult = JsonConvert.SerializeObject(commands);
+                    var commandsJsonResult = JsonConvert.SerializeObject(commands, Formatting.Indented);
+
+                    Console.WriteLine("File: {0}", file.Name);
+                    Console.WriteLine("Source:");
+                    Console.WriteLine();
+                    Console.WriteLine(File.ReadAllText(file.FullName));
+                    Console.WriteLine();
+                    Console.WriteLine("Json from parsing:");
+                    Console.WriteLine();
+                    Console.WriteLine(commandsJsonResult);
+                    Console.WriteLine();
+                    Console.WriteLine("".PadLeft(Console.WindowWidth, '-'));
+                    Console.WriteLine("".PadLeft(Console.WindowWidth, '-'));
+                    Console.WriteLine("".PadLeft(Console.WindowWidth, '-'));
+                    Console.WriteLine();
                 }
             }
         }
