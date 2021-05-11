@@ -1,0 +1,3 @@
+someNumber = 10
+someNumber = someNumber + 10
+print(someNumber)

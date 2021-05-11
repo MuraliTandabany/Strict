@@ -1,0 +1,8 @@
+for i to 10
+    for j to 20
+        for k to 30
+            print(i + j + k)
+
+
+for i to functionThatReturnSomeRange(200)
+    print(i * 10)
