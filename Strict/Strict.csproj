@@ -37,6 +37,9 @@
     <None Update="StrictFileTests\test_let.strict">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="StrictFileTests\test_multipleMethods.strict">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

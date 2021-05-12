@@ -11,7 +11,7 @@ namespace Strict.Compiler
 {
 	public class Parser
 	{
-		public static HashSet<string> Opslevel0 { get; } = new()
+		private static HashSet<string> Opslevel0 { get; } = new()
 		{
 			">",
 			"<",
@@ -21,9 +21,9 @@ namespace Strict.Compiler
 			"==",
 			"!="
 		};
-		public static HashSet<string> Opslevel1 { get; } = new() { "+", "-" };
-		public static HashSet<string> Opslevel2 { get; } = new() { "*", "/" };
-		public static HashSet<string> Opslevel3 { get; } = new() { "**" };
+		private static HashSet<string> Opslevel1 { get; } = new() { "+", "-" };
+		private static HashSet<string> Opslevel2 { get; } = new() { "*", "/" };
+		private static HashSet<string> Opslevel3 { get; } = new() { "**" };
 		private readonly Dictionary<string, Func<Parser, ICommand>> commandActions = new()
 		{
 			{ "has", p => p.CompileHasCommand() },
@@ -36,7 +36,7 @@ namespace Strict.Compiler
 		};
 		
 		private int IndentLevel { get; set; }
-		public Lexer LexicalAnalyzer { get; }
+		private Lexer LexicalAnalyzer { get; }
 
 		public Parser(Lexer lexer) =>
 			LexicalAnalyzer = lexer ?? throw new ArgumentNullException(nameof(lexer));
@@ -46,7 +46,7 @@ namespace Strict.Compiler
 		public Parser(TextReader reader) : this(new Lexer(reader)) { }
 
 		private static bool IsLevel0Operator(Token token) =>
-			token != null && token.TokenType == TokenType.Operator && Opslevel0.Contains(token.Value);
+			token is { TokenType: TokenType.Operator } && Opslevel0.Contains(token.Value);
 
 		private static bool IsLevel1Operator(Token token) =>
 			token is { TokenType: TokenType.Operator } && Opslevel1.Contains(token.Value);
@@ -76,7 +76,7 @@ namespace Strict.Compiler
 			var list = CompileExpressionList();
 			return list == null
 				? new ListExpression(new List<IExpression>())
-				: (IExpression)new ListExpression(list);
+				: new ListExpression(list);
 		}
 
 		public ICommand CompileCommand()
@@ -85,6 +85,7 @@ namespace Strict.Compiler
 			var newIndentation = LexicalAnalyzer.NextIndent();
 			if (newIndentation < IndentLevel)
 			{
+				SkipEmptyLines();
 				LexicalAnalyzer.PushIndent(newIndentation);
 				return null;
 			}
@@ -93,9 +94,9 @@ namespace Strict.Compiler
 			return CompileSimpleCommand();
 		}
 
-		public ICommand CompileCommandList()
+		private List<ICommand> ProcessCommands()
 		{
-			var commands = new List<ICommand>();
+			var commands = new List<ICommand>(); 
 			while (true)
 			{
 				var command = CompileCommand();
@@ -103,6 +104,12 @@ namespace Strict.Compiler
 					break;
 				commands.Add(command);
 			}
+			return commands;
+		}
+
+		public ICommand CompileCommandList()
+		{
+			var commands = ProcessCommands();
 			return commands.Count switch
 			{
 				0 => null,
@@ -117,10 +124,8 @@ namespace Strict.Compiler
 			try
 			{
 				IndentLevel = newIndentation;
-				var commands = new List<ICommand>();
 				LexicalAnalyzer.PushIndent(newIndentation);
-				for (var command = CompileCommand(); command != null; command = CompileCommand())
-					commands.Add(command);
+				var commands = ProcessCommands();
 				return commands.Count switch
 				{
 					0 => null,
@@ -167,15 +172,6 @@ namespace Strict.Compiler
 				return;
 			if (token.TokenType != TokenType.Separator)
 				throw new UnexpectedTokenException(token.Value);
-		}
-
-		private bool TryPeekCompileEndOfCommand()
-		{
-			var token = LexicalAnalyzer.NextToken();
-			LexicalAnalyzer.PushToken(token);
-			if (token == null || token.TokenType == TokenType.EndOfLine)
-				return true;
-			return token.TokenType == TokenType.Separator && token.Value == ";";
 		}
 
 		private ExpressionCommand CompileExpressionCommand()
@@ -236,30 +232,34 @@ namespace Strict.Compiler
 
 		private IList<string> CompileNameList()
 		{
-			IList<string> names = new List<string>();
+			var names = new List<string>();
 			names.Add(CompileName(true).Value);
 			while (TryCompile(TokenType.Separator, ","))
-				names.Add(CompileName(true).Value);
+			{
+				var name = CompileName(true).Value;
+				while (TryCompile(TokenType.Operator, "."))
+					name += "." + CompileName(true).Value;
+				names.Add(name);
+			}
 			return names;
 		}
 
 		private IList<ParameterExpression> CompileParameterExpressionList()
 		{
-			IList<ParameterExpression> parameters = new List<ParameterExpression>();
+			var parameters = new List<ParameterExpression>();
 			if (TryPeekCompile(TokenType.Separator, ")"))
 				return parameters;
-			var parexpr = CompileParameterExpression();
-			var hasList = parexpr.IsList;
-			parameters.Add(parexpr);
+			var parameterExpression = CompileParameterExpression();
+			var hasList = parameterExpression.IsList;
+			parameters.Add(parameterExpression);
 			while (TryCompile(TokenType.Separator, ","))
 			{
-				parexpr = CompileParameterExpression();
-				if (parexpr.IsList)
-					if (hasList)
-						throw new SyntaxErrorException("invalid syntax");
-					else
-						hasList = true;
-				parameters.Add(parexpr);
+				parameterExpression = CompileParameterExpression();
+				if (parameterExpression.IsList)
+					hasList = hasList
+						? throw new SyntaxErrorException("invalid syntax")
+						: true;
+				parameters.Add(parameterExpression);
 			}
 			return parameters;
 		}
@@ -304,7 +304,7 @@ namespace Strict.Compiler
 			while (TryCompile(TokenType.Operator, "."))
 				name += "." + CompileName(true).Value;
 			var token = LexicalAnalyzer.NextToken();
-			if (token.TokenType == TokenType.EndOfLine)
+			if (token == null || token.TokenType == TokenType.EndOfLine)
 				return new HasCommand(name);
 			var names = CompileNameList();
 			CompileEndOfCommand();
@@ -385,12 +385,11 @@ namespace Strict.Compiler
 				var token = LexicalAnalyzer.NextToken();
 				if (token == null)
 					return;
-				if (token.TokenType != TokenType.EndOfLine)
-				{
-					LexicalAnalyzer.PushToken(token);
-					LexicalAnalyzer.PushIndent(newIndentation);
-					return;
-				}
+				if (token.TokenType == TokenType.EndOfLine)
+					continue;
+				LexicalAnalyzer.PushToken(token);
+				LexicalAnalyzer.PushIndent(newIndentation);
+				return;
 			}
 		}
 
@@ -493,7 +492,7 @@ namespace Strict.Compiler
 
 		private IList<IExpression> CompileArgumentExpressionList()
 		{
-			IList<IExpression> expressions = new List<IExpression>();
+			var expressions = new List<IExpression>();
 			var expression = CompileArgumentExpression();
 			if (expression == null)
 				return null;
@@ -527,6 +526,7 @@ namespace Strict.Compiler
 			if (term == null)
 				return null;
 			while (true)
+			{
 				if (TryCompile(TokenType.Operator, "."))
 					term = new AttributeExpression(term, CompileName(true).Value);
 				else if (TryCompile(TokenType.Separator, "("))
@@ -535,6 +535,7 @@ namespace Strict.Compiler
 					term = CompileIndexedExpression(term);
 				else
 					break;
+			}
 			return term;
 		}
 
@@ -548,7 +549,7 @@ namespace Strict.Compiler
 		private IExpression CompileIndexedExpression(IExpression term)
 		{
 			IExpression indexExpression = null;
-			IExpression endExpression = null;
+			IExpression endExpression;
 			if (!TryCompile(TokenType.Separator, ":"))
 			{
 				indexExpression = CompileExpression();
@@ -590,7 +591,8 @@ namespace Strict.Compiler
 			case TokenType.Operator:
 				if (token.Value == "-")
 					return new NegateExpression(CompileTerm());
-				break;
+				else
+					break;
 			case TokenType.Separator:
 				if (token.Value == "(")
 				{

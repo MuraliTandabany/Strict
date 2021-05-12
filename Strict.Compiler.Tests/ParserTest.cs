@@ -68,7 +68,17 @@ namespace Strict.Compiler.Tests
 		[TestCase(
 			"let a = someCrazyFunction(b(c(d(e(f(g(h(i(j(k(l(m(n(o(p(q(r(s(t(u(v(w(y(z(x)))))))))))))))))))))))))")]
 		[TestCase("let a = 10\r\nlet b = \"abcdefghijklmnopqrstuvwxyz\"")]
+		[TestCase("let a = (10+(20*(30-10)))")]
+		[TestCase("let a = -10")]
 		public void LetAssignmentTest(string expression)
+		{
+			var parser = new Parser(expression);
+			var command = parser.CompileCommand();
+		}
+		
+		[TestCase("let a = true")]
+		[TestCase("let b = false")]
+		public void BooleanTest(string expression)
 		{
 			var parser = new Parser(expression);
 			var command = parser.CompileCommand();
@@ -96,15 +106,58 @@ namespace Strict.Compiler.Tests
 			var parser = new Parser(expression);
 			var command = parser.CompileCommand();
 		}
-
-		[TestCase("implement c1\r\n", "c1")]
-		public void ClassExpressionTest(string expression, string className)
+		
+		[TestCase("implement c1\r\nmethod m1()\r\n\tprint()", "c1", new[] { "m1" })]
+		public void ClassExpressionTest(string expression, string className, string[] methodNames)
 		{
 			var parser = new Parser(expression);
 			var command = parser.CompileCommand();
 			Assert.That(command, Is.TypeOf<ClassCommand>());
 			var classCommand = (ClassCommand)command;
 			Assert.That(classCommand.Name, Is.EqualTo(className));
+		}
+
+		[TestCase("implement c1\r\nmethod m1(*param)\r\n\tprint()\r\nlet array = [10,20,30]\r\nc1.m1(array)")]
+		public void ListParameterExpressionTest(string expression)
+		{
+			var parser = new Parser(expression);
+			var command = parser.CompileCommand();
+		}
+
+		[TestCase("while a == true\r\n\tprint(a)")]
+		[TestCase("while (a == true) and (b == false)\r\n\tprint(a, b)")]
+		[TestCase("while (a == true) or (b == false)\r\n\tprint(a, b)")]
+		[TestCase("while ((a == true) and (b == false)) or (not (a == true) or not (b == false))\r\n\tprint(a, b)")]
+		[TestCase("while not ((a == true) or (b == false)) \r\n\tprint(a, b)")]
+		public void WhileExpressionTest(string expression)
+		{
+			var parser = new Parser(expression);
+			var command = parser.CompileCommand();
+		}
+
+		[TestCase("if a == 10\r\n\tprint(a, b)")]
+		[TestCase("if a >= 10\r\n\tprint(a, b)")]
+		[TestCase("if a != 10\r\n\tprint(a, b)")]
+		[TestCase("if a <> 10\r\n\tprint(a, b)")]
+		[TestCase("if a > 10 and 10 <= a\r\n\tprint(a, b)")]
+		[TestCase("if a >= 10 or 10 <= a\r\n\tprint(a, b)")]
+		[TestCase("if a <= 10 and ((10 <= a) and not (a >= 10))\r\n\tprint(a, b)")]
+		[TestCase("if a < 10 and ((10 <= a) and not (a >= 10))\r\n\tprint(a, b)")]
+		[TestCase("if a <> 10\r\n\tprint(a, b)\r\nelse\r\n\tprint(a, b)")]
+		[TestCase("if a <> 10\r\n\tprint(a, b)\r\nelseif\r\n\tprint(a, b)\r\nelse\r\n\tprint(a, b)")]
+		public void IfElseElseIfExpressionTest(string expression)
+		{
+			var parser = new Parser(expression);
+			var command = parser.CompileCommand();
+		}
+
+		[TestCase("has log")]
+		[TestCase("has system.log")]
+		[TestCase("has log, user, system.kernel, system.user32")]
+		public void HasExpressionTest(string expression)
+		{
+			var parser = new Parser(expression);
+			var command = parser.CompileCommand();
 		}
 	}
 }
