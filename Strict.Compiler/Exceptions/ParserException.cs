@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Strict.Compiler
+namespace Strict.Compiler.Exceptions
 {
 	public abstract class ParserException : Exception
 	{

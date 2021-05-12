@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Strict.Compiler.Exceptions;
 using Strict.Exceptions;
 using Strict.Language;
 using Strict.Language.Commands;

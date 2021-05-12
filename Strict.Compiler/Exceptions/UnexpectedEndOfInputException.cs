@@ -1,6 +1,6 @@
 ﻿using Strict.Exceptions;
 
-namespace Strict.Compiler
+namespace Strict.Compiler.Exceptions
 {
 	public class UnexpectedEndOfInputException : SyntaxErrorException
 	{

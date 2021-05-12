@@ -1,4 +1,4 @@
-﻿namespace Strict.Compiler
+﻿namespace Strict.Compiler.Exceptions
 {
 	public class ExpectedTokenException : ParserException
 	{
