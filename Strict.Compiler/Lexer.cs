@@ -45,7 +45,9 @@ namespace Strict.Compiler
 			"<>",
 			"!=",
 			"|>",
-			"<|"
+			"<|",
+			"++",
+			"--"
 		};
 
 		private readonly Stack<int> lastChars = new();

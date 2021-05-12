@@ -33,7 +33,8 @@ namespace Strict.Compiler
 			{ "for", p => p.CompileForCommand() },
 			{ "while", p => p.CompileWhileCommand() },
 			{ "method", p => p.CompileMethodCommand() },
-			{ "let", p => p.CompileLetCommand() }
+			{ "let", p => p.CompileLetCommand() },
+			{ "return", p => p.CompileReturnCommand() }
 		};
 		
 		private int IndentLevel { get; set; }
@@ -173,6 +174,14 @@ namespace Strict.Compiler
 				return;
 			if (token.TokenType != TokenType.Separator)
 				throw new UnexpectedTokenException(token.Value);
+		}
+
+		private bool TryPeekCompileEndOfCommand()
+		{
+			var token = LexicalAnalyzer.NextToken();
+			LexicalAnalyzer.PushToken(token);
+
+			return token == null || token.TokenType == TokenType.EndOfLine;
 		}
 
 		private ExpressionCommand CompileExpressionCommand()
@@ -353,7 +362,7 @@ namespace Strict.Compiler
 			return new MethodCommand(name, parameters, body);
 		}
 
-		public ICommand CompileLetCommand()
+		private ICommand CompileLetCommand()
 		{
 			var expressionCommand = CompileExpressionCommand();
 			if (!TryCompile(TokenType.Operator, "="))
@@ -368,6 +377,19 @@ namespace Strict.Compiler
 				AttributeExpression => CompileAttributeExpression(expressionCommand, valueExpression),
 				_ => throw new SyntaxErrorException("invalid assignment")
 			};
+		}
+
+		private ICommand CompileReturnCommand()
+		{
+			if (TryPeekCompileEndOfCommand())
+			{
+				this.CompileEndOfCommand();
+				return new ReturnCommand(null);
+			}
+
+			var command = new ReturnCommand(this.CompileExpression());
+			this.CompileEndOfCommand();
+			return command;
 		}
 
 		private ICommand CompileClassCommand()
@@ -645,7 +667,7 @@ namespace Strict.Compiler
 			var token = LexicalAnalyzer.NextToken();
 			if (token == null && !required)
 				return null;
-			if (token == null || token.TokenType != TokenType.Name)
+			if (token == null || (token.TokenType != TokenType.Name && token.TokenType != TokenType.Operator))
 				throw new NameExpectedException();
 			return token;
 		}

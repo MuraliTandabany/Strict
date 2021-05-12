@@ -108,6 +108,8 @@ namespace Strict.Compiler.Tests
 		}
 		
 		[TestCase("implement c1\r\nmethod m1()\r\n\tprint()", "c1", new[] { "m1" })]
+		[TestCase("implement c1\r\nmethod m1(p1, p2, *p3)\r\n\tprint(p1, p2, p3)", "c1", new[] { "m1" })]
+		[TestCase("implement c1\r\nmethod m1(t1, t2, val = 5)\r\n\tprint()", "c1", new[] { "m1" })]
 		public void ClassExpressionTest(string expression, string className, string[] methodNames)
 		{
 			var parser = new Parser(expression);

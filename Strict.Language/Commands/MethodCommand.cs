@@ -20,10 +20,16 @@ namespace Strict.Language.Commands
 			Name = name;
 			ParameterExpressions = parameterExpressions;
 			Body = body;
-			if (ParameterExpressions == null)
-				return;
-			if (ParameterExpressions.Any(x => x.DefaultExpression != null))
-				throw new SyntaxErrorException("non-default argument follows default argument");
+			
+			if (ParameterExpressions != null)
+			{
+				bool hasDefault = false;
+				foreach (var parameterExpression in ParameterExpressions)
+					if (parameterExpression.DefaultExpression != null)
+						hasDefault = true;
+					else if (hasDefault)
+						throw new SyntaxErrorException("non-default argument follows default argument");
+			}
 		}
 
 		public void Visitor(IContext context) => throw new NotImplementedException();

@@ -1,5 +1,15 @@
 implement c1
-method m1()
+
+method defaultParm(val = true)
+	print(val)
+method ++()
+	print()
+method --()
+	print()
+method >=(val)
+	return x >= val
+
+method m1(p1, p2 = true)
 	print()
 method m2(p1, p2)
 	print()
