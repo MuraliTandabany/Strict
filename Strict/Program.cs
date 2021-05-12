@@ -26,7 +26,7 @@ namespace Strict
 				var parsedFiles = new List<ICommand>();
 				var directoryInfo = new DirectoryInfo("StrictFileTests");
 				foreach (var file in directoryInfo.GetFiles("*.strict").
-					Where(x => x.Name == "test_multipleMethods.strict"))
+					Where(x => x.Name == "test_classCounter.strict"))
 				{
 					var sw = Stopwatch.StartNew();
 					var parser = new Parser(File.OpenText(file.FullName));

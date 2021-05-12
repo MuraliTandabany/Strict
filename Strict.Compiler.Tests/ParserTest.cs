@@ -70,6 +70,7 @@ namespace Strict.Compiler.Tests
 		[TestCase("let a = 10\r\nlet b = \"abcdefghijklmnopqrstuvwxyz\"")]
 		[TestCase("let a = (10+(20*(30-10)))")]
 		[TestCase("let a = -10")]
+		[TestCase("let a")]
 		public void LetAssignmentTest(string expression)
 		{
 			var parser = new Parser(expression);
@@ -160,6 +161,13 @@ namespace Strict.Compiler.Tests
 		[TestCase("has system.log")]
 		[TestCase("has log, user, system.kernel, system.user32")]
 		public void HasExpressionTest(string expression)
+		{
+			var parser = new Parser(expression);
+			var command = parser.CompileCommand();
+		}
+
+		[TestCase("method p1(p = true)\r\n\treturn p ")]
+		public void ReturnCommandTest(string expression)
 		{
 			var parser = new Parser(expression);
 			var command = parser.CompileCommand();

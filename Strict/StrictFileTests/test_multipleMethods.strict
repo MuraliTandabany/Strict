@@ -1,5 +1,4 @@
 implement c1
-
 method defaultParm(val = true)
 	print(val)
 method ++()

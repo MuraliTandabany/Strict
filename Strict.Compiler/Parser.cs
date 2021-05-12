@@ -24,7 +24,14 @@ namespace Strict.Compiler
 		};
 		private static HashSet<string> Opslevel1 { get; } = new() { "+", "-" };
 		private static HashSet<string> Opslevel2 { get; } = new() { "*", "/" };
-		private static HashSet<string> Opslevel3 { get; } = new() { "**" };
+		private static HashSet<string> Opslevel3 { get; } = new()
+		{
+			"**",
+			"++",
+			"--",
+			"|>",
+			"<|"
+		};
 		private readonly Dictionary<string, Func<Parser, ICommand>> commandActions = new()
 		{
 			{ "has", p => p.CompileHasCommand() },
@@ -149,6 +156,8 @@ namespace Strict.Compiler
 				"*" => BinaryOperator.Multiply,
 				"/" => BinaryOperator.Divide,
 				"**" => BinaryOperator.Power,
+				"++" => BinaryOperator.Increment,
+				"--" => BinaryOperator.Decrement,
 				_ => throw new InvalidOperationException($"Unexpected {oper}")
 			};
 

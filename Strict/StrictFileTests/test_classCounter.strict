@@ -1,6 +1,6 @@
 implement Counter
 let counter = 0
 method Increment()
-    counter += 1
+    counter++
 method Decrement(data)
-    counter -= 1
+    counter--

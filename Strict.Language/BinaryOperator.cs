@@ -6,6 +6,8 @@
 		Subtract,
 		Multiply,
 		Divide,
-		Power
+		Power,
+		Increment,
+		Decrement
 	}
 }
