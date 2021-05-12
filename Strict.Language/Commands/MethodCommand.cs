@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Strict.Exceptions;
 using Strict.Language.Expressions;
 
@@ -20,10 +19,9 @@ namespace Strict.Language.Commands
 			Name = name;
 			ParameterExpressions = parameterExpressions;
 			Body = body;
-			
 			if (ParameterExpressions != null)
 			{
-				bool hasDefault = false;
+				var hasDefault = false;
 				foreach (var parameterExpression in ParameterExpressions)
 					if (parameterExpression.DefaultExpression != null)
 						hasDefault = true;

@@ -75,7 +75,7 @@ namespace Strict.Compiler.Tests
 			var parser = new Parser(expression);
 			var command = parser.CompileCommand();
 		}
-		
+
 		[TestCase("let a = true")]
 		[TestCase("let b = false")]
 		public void BooleanTest(string expression)
@@ -106,9 +106,10 @@ namespace Strict.Compiler.Tests
 			var parser = new Parser(expression);
 			var command = parser.CompileCommand();
 		}
-		
+
 		[TestCase("implement c1\r\nmethod m1()\r\n\tprint()", "c1", new[] { "m1" })]
-		[TestCase("implement c1\r\nmethod m1(p1, p2, *p3)\r\n\tprint(p1, p2, p3)", "c1", new[] { "m1" })]
+		[TestCase("implement c1\r\nmethod m1(p1, p2, *p3)\r\n\tprint(p1, p2, p3)", "c1",
+			new[] { "m1" })]
 		[TestCase("implement c1\r\nmethod m1(t1, t2, val = 5)\r\n\tprint()", "c1", new[] { "m1" })]
 		public void ClassExpressionTest(string expression, string className, string[] methodNames)
 		{
@@ -119,7 +120,8 @@ namespace Strict.Compiler.Tests
 			Assert.That(classCommand.Name, Is.EqualTo(className));
 		}
 
-		[TestCase("implement c1\r\nmethod m1(*param)\r\n\tprint()\r\nlet array = [10,20,30]\r\nc1.m1(array)")]
+		[TestCase(
+			"implement c1\r\nmethod m1(*param)\r\n\tprint()\r\nlet array = [10,20,30]\r\nc1.m1(array)")]
 		public void ListParameterExpressionTest(string expression)
 		{
 			var parser = new Parser(expression);
@@ -129,7 +131,8 @@ namespace Strict.Compiler.Tests
 		[TestCase("while a == true\r\n\tprint(a)")]
 		[TestCase("while (a == true) and (b == false)\r\n\tprint(a, b)")]
 		[TestCase("while (a == true) or (b == false)\r\n\tprint(a, b)")]
-		[TestCase("while ((a == true) and (b == false)) or (not (a == true) or not (b == false))\r\n\tprint(a, b)")]
+		[TestCase(
+			"while ((a == true) and (b == false)) or (not (a == true) or not (b == false))\r\n\tprint(a, b)")]
 		[TestCase("while not ((a == true) or (b == false)) \r\n\tprint(a, b)")]
 		public void WhileExpressionTest(string expression)
 		{

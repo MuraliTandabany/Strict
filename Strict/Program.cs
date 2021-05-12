@@ -24,17 +24,15 @@ namespace Strict
 			public static void ParseStrictSourcesTest()
 			{
 				var parsedFiles = new List<ICommand>();
-
 				var directoryInfo = new DirectoryInfo("StrictFileTests");
-				foreach (var file in directoryInfo.GetFiles("*.strict").Where(x => x.Name == "test_multipleMethods.strict"))
+				foreach (var file in directoryInfo.GetFiles("*.strict").
+					Where(x => x.Name == "test_multipleMethods.strict"))
 				{
 					var sw = Stopwatch.StartNew();
 					var parser = new Parser(File.OpenText(file.FullName));
 					var commands = parser.CompileCommandList();
 					parsedFiles.Add(commands);
 					var elapsedTime = sw.Elapsed;
-					
-
 					var commandsJsonResult = JsonConvert.SerializeObject(commands, Formatting.Indented);
 					Console.WriteLine("File: {0}", file.Name);
 					Console.WriteLine("Total used time to build: {0}", elapsedTime);
@@ -51,7 +49,6 @@ namespace Strict
 					Console.WriteLine("".PadLeft(Console.WindowWidth, '-'));
 					Console.WriteLine();
 				}
-				
 			}
 		}
 

@@ -36,7 +36,7 @@ namespace Strict.Compiler
 			{ "let", p => p.CompileLetCommand() },
 			{ "return", p => p.CompileReturnCommand() }
 		};
-		
+
 		private int IndentLevel { get; set; }
 		private Lexer LexicalAnalyzer { get; }
 
@@ -98,7 +98,7 @@ namespace Strict.Compiler
 
 		private List<ICommand> ProcessCommands()
 		{
-			var commands = new List<ICommand>(); 
+			var commands = new List<ICommand>();
 			while (true)
 			{
 				var command = CompileCommand();
@@ -180,7 +180,6 @@ namespace Strict.Compiler
 		{
 			var token = LexicalAnalyzer.NextToken();
 			LexicalAnalyzer.PushToken(token);
-
 			return token == null || token.TokenType == TokenType.EndOfLine;
 		}
 
@@ -383,12 +382,11 @@ namespace Strict.Compiler
 		{
 			if (TryPeekCompileEndOfCommand())
 			{
-				this.CompileEndOfCommand();
+				CompileEndOfCommand();
 				return new ReturnCommand(null);
 			}
-
-			var command = new ReturnCommand(this.CompileExpression());
-			this.CompileEndOfCommand();
+			var command = new ReturnCommand(CompileExpression());
+			CompileEndOfCommand();
 			return command;
 		}
 
@@ -549,7 +547,6 @@ namespace Strict.Compiler
 			if (term == null)
 				return null;
 			while (true)
-			{
 				if (TryCompile(TokenType.Operator, "."))
 					term = new AttributeExpression(term, CompileName(true).Value);
 				else if (TryCompile(TokenType.Separator, "("))
@@ -558,7 +555,6 @@ namespace Strict.Compiler
 					term = CompileIndexedExpression(term);
 				else
 					break;
-			}
 			return term;
 		}
 
@@ -589,7 +585,9 @@ namespace Strict.Compiler
 				endExpression = CompileExpression();
 			}
 			else
+			{
 				endExpression = CompileExpression();
+			}
 			CompileToken(TokenType.Separator, "]");
 			return new SlicedExpression(term, new SliceExpression(indexExpression, endExpression));
 		}
@@ -667,7 +665,8 @@ namespace Strict.Compiler
 			var token = LexicalAnalyzer.NextToken();
 			if (token == null && !required)
 				return null;
-			if (token == null || (token.TokenType != TokenType.Name && token.TokenType != TokenType.Operator))
+			if (token == null ||
+				token.TokenType != TokenType.Name && token.TokenType != TokenType.Operator)
 				throw new NameExpectedException();
 			return token;
 		}
