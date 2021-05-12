@@ -1,24 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Strict.Compiler;
+using Strict.Language.Commands;
 
 namespace Strict
 {
 	internal class Program
 	{
+		public class Module
+		{
+			public string ModuleName { get; }
+			public ICommand Commands { get; }
+			public Dictionary<string, object> Methods { get; }
+			public Dictionary<string, object> Fields { get; }
+		}
+
 		private static class TestFiles
 		{
 			public static void ParseStrictSourcesTest()
 			{
+				var parsedFiles = new List<ICommand>();
+
 				var directoryInfo = new DirectoryInfo("StrictFileTests");
-				foreach (var file in directoryInfo.GetFiles("*.strict"))
+				foreach (var file in directoryInfo.GetFiles("*.strict").Where(x => x.Name == "test_classLog.strict"))
 				{
 					var sw = Stopwatch.StartNew();
 					var parser = new Parser(File.OpenText(file.FullName));
 					var commands = parser.CompileCommandList();
+					parsedFiles.Add(commands);
 					var elapsedTime = sw.Elapsed;
+					
+
 					var commandsJsonResult = JsonConvert.SerializeObject(commands, Formatting.Indented);
 					Console.WriteLine("File: {0}", file.Name);
 					Console.WriteLine("Total used time to build: {0}", elapsedTime);
@@ -35,6 +51,7 @@ namespace Strict
 					Console.WriteLine("".PadLeft(Console.WindowWidth, '-'));
 					Console.WriteLine();
 				}
+				
 			}
 		}
 

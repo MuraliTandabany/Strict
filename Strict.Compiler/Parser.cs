@@ -34,8 +34,7 @@ namespace Strict.Compiler
 			{ "method", p => p.CompileMethodCommand() },
 			{ "let", p => p.CompileLetCommand() }
 		};
-
-		private bool LastSemicolon { get; set; }
+		
 		private int IndentLevel { get; set; }
 		public Lexer LexicalAnalyzer { get; }
 
@@ -50,13 +49,13 @@ namespace Strict.Compiler
 			token != null && token.TokenType == TokenType.Operator && Opslevel0.Contains(token.Value);
 
 		private static bool IsLevel1Operator(Token token) =>
-			token != null && token.TokenType == TokenType.Operator && Opslevel1.Contains(token.Value);
+			token is { TokenType: TokenType.Operator } && Opslevel1.Contains(token.Value);
 
 		private static bool IsLevel2Operator(Token token) =>
-			token != null && token.TokenType == TokenType.Operator && Opslevel2.Contains(token.Value);
+			token is { TokenType: TokenType.Operator } && Opslevel2.Contains(token.Value);
 
 		private static bool IsLevel3Operator(Token token) =>
-			token != null && token.TokenType == TokenType.Operator && Opslevel3.Contains(token.Value);
+			token is { TokenType: TokenType.Operator } && Opslevel3.Contains(token.Value);
 
 		public IExpression CompileExpression() => CompileOrExpression();
 
@@ -82,29 +81,23 @@ namespace Strict.Compiler
 
 		public ICommand CompileCommand()
 		{
-			if (!LastSemicolon)
+			SkipEmptyLines();
+			var newIndentation = LexicalAnalyzer.NextIndent();
+			if (newIndentation < IndentLevel)
 			{
-				SkipEmptyLines();
-				var newIndentation = LexicalAnalyzer.NextIndent();
-				if (newIndentation < IndentLevel)
-				{
-					LexicalAnalyzer.PushIndent(newIndentation);
-					return null;
-				}
-				if (newIndentation > IndentLevel)
-					throw new SyntaxErrorException("unexpected indent");
+				LexicalAnalyzer.PushIndent(newIndentation);
+				return null;
 			}
+			if (newIndentation > IndentLevel)
+				throw new SyntaxErrorException("unexpected indent");
 			return CompileSimpleCommand();
 		}
 
 		public ICommand CompileCommandList()
 		{
-			var lastSemi = LastSemicolon;
 			var commands = new List<ICommand>();
 			while (true)
 			{
-				if (lastSemi && !LastSemicolon)
-					break;
 				var command = CompileCommand();
 				if (command == null)
 					break;
@@ -167,15 +160,13 @@ namespace Strict.Compiler
 
 		private void CompileEndOfCommand()
 		{
-			LastSemicolon = false;
 			var token = LexicalAnalyzer.NextToken();
 			if (token == null)
 				return;
 			if (token.TokenType == TokenType.EndOfLine)
 				return;
-			if (token.TokenType != TokenType.Separator || token.Value != ";")
+			if (token.TokenType != TokenType.Separator)
 				throw new UnexpectedTokenException(token.Value);
-			LastSemicolon = true;
 		}
 
 		private bool TryPeekCompileEndOfCommand()
@@ -283,19 +274,19 @@ namespace Strict.Compiler
 			return new ParameterExpression(name, expression, isList);
 		}
 
-		private ICommand CompileSuite()
+		private ICommand CompileSuite() => CompileSuite(true);
+
+		private ICommand CompileSuite(bool checkForNewIndentation)
 		{
 			var token = LexicalAnalyzer.NextToken();
 			if (token == null)
 				throw new UnexpectedEndOfInputException();
-			if (token.TokenType != TokenType.EndOfLine)
-			{
-				LexicalAnalyzer.PushToken(token);
-				LastSemicolon = true;
-				return CompileCommandList();
-			}
-			var newindent = LexicalAnalyzer.NextIndent();
-			return CompileNestedCommandList(newindent);
+			if (token.TokenType == TokenType.EndOfLine)
+				return CompileNestedCommandList(checkForNewIndentation
+					? LexicalAnalyzer.NextIndent()
+					: IndentLevel);
+			LexicalAnalyzer.PushToken(token);
+			return CompileCommandList();
 		}
 
 		private ICommand CompileForCommand()
@@ -382,7 +373,7 @@ namespace Strict.Compiler
 		{
 			var name = CompileName(true).Value;
 			//IList<IExpression> inheritances = null;
-			var body = CompileSuite();
+			var body = CompileSuite(false);
 			return new ClassCommand(name, null /* inheritances */, body);
 		}
 
@@ -574,9 +565,7 @@ namespace Strict.Compiler
 				endExpression = CompileExpression();
 			}
 			else
-			{
 				endExpression = CompileExpression();
-			}
 			CompileToken(TokenType.Separator, "]");
 			return new SlicedExpression(term, new SliceExpression(indexExpression, endExpression));
 		}

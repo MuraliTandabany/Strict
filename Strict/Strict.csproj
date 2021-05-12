@@ -25,6 +25,12 @@
     <None Update="StrictFileTests\test_basic1.strict">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="StrictFileTests\test_classCounter.strict">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="StrictFileTests\test_classLog.strict">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="StrictFileTests\test_forLoop.strict">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
