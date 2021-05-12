@@ -40,6 +40,9 @@
     <None Update="StrictFileTests\test_multipleMethods.strict">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="StrictFileTests\test_pipeForwardAndBack.strict">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

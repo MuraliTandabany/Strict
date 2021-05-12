@@ -172,5 +172,12 @@ namespace Strict.Compiler.Tests
 			var parser = new Parser(expression);
 			var command = parser.CompileCommand();
 		}
+
+		//[TestCase("let sub = |a, b| => a - b")]
+		//public void LambdaExpressionTest(string expression)
+		//{
+		//	var parser = new Parser(expression);
+		//	var command = parser.CompileCommand();
+		//}
 	}
 }

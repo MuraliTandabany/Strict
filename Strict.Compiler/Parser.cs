@@ -20,7 +20,9 @@ namespace Strict.Compiler
 			"<=",
 			"<>",
 			"==",
-			"!="
+			"!=",
+			"|",
+			"&"
 		};
 		private static HashSet<string> Opslevel1 { get; } = new() { "+", "-" };
 		private static HashSet<string> Opslevel2 { get; } = new() { "*", "/" };
@@ -30,7 +32,8 @@ namespace Strict.Compiler
 			"++",
 			"--",
 			"|>",
-			"<|"
+			"|<",
+			"=>"
 		};
 		private readonly Dictionary<string, Func<Parser, ICommand>> commandActions = new()
 		{
@@ -550,6 +553,17 @@ namespace Strict.Compiler
 			return CompileExpression();
 		}
 
+		private IExpression CompileLambdaArgumentExpression()
+		{
+			var arguments = CompileArgumentExpressionList();
+			//ICommand expressionBody = null;
+			//if (TryCompile(TokenType.Operator, "=>"))
+			//{
+			//	expressionBody = CompileSuite();
+			//}
+			return new LambdaExpression(null, arguments);
+		}
+
 		private IExpression CompileTerm()
 		{
 			var term = CompileSimpleTerm();
@@ -621,6 +635,8 @@ namespace Strict.Compiler
 			case TokenType.Operator:
 				if (token.Value == "-")
 					return new NegateExpression(CompileTerm());
+				if (token.Value == "|")
+					return CompileLambdaArgumentExpression();
 				else
 					break;
 			case TokenType.Separator:

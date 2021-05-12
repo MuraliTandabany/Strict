@@ -52,6 +52,18 @@ namespace Strict
 			}
 		}
 
-		private static void Main(string[] args) => TestFiles.ParseStrictSourcesTest();
+		private static void TestCompilationSimpleCommand(string command)
+		{
+			var parser = new Parser(command);
+			var commands = parser.CompileCommandList();
+			var commandsJsonResult = JsonConvert.SerializeObject(commands, Formatting.Indented);
+			Console.WriteLine(commandsJsonResult);
+		}
+
+		private static void Main(string[] args)
+		{
+			TestCompilationSimpleCommand("let sub = |a, b| => a - b");
+			TestFiles.ParseStrictSourcesTest();
+		}
 	}
 }

@@ -48,7 +48,7 @@ namespace Strict.Compiler.Tests
 		[Test]
 		public void TestTokenizerPipe()
 		{
-			const string source = "let test = 10 |> print <| function <| print ";
+			const string source = "let test = 10 |> print |< function |< print ";
 			var lexer = new Lexer(source);
 			AssertToken(lexer.NextToken(), new Token { Value = "let", TokenType = TokenType.Name });
 			AssertToken(lexer.NextToken(), new Token { Value = "test", TokenType = TokenType.Name });
@@ -56,9 +56,9 @@ namespace Strict.Compiler.Tests
 			AssertToken(lexer.NextToken(), new Token { Value = "10", TokenType = TokenType.Integer });
 			AssertToken(lexer.NextToken(), new Token { Value = "|>", TokenType = TokenType.Operator });
 			AssertToken(lexer.NextToken(), new Token { Value = "print", TokenType = TokenType.Name });
-			AssertToken(lexer.NextToken(), new Token { Value = "<|", TokenType = TokenType.Operator });
+			AssertToken(lexer.NextToken(), new Token { Value = "|<", TokenType = TokenType.Operator });
 			AssertToken(lexer.NextToken(), new Token { Value = "function", TokenType = TokenType.Name });
-			AssertToken(lexer.NextToken(), new Token { Value = "<|", TokenType = TokenType.Operator });
+			AssertToken(lexer.NextToken(), new Token { Value = "|<", TokenType = TokenType.Operator });
 		}
 
 		[Test]

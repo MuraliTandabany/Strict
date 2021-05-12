@@ -1,0 +1,17 @@
+implement someTestClass
+
+let sub = (a, b) => a - b
+let div = (a, b) => a / b
+
+method oprationOne()
+	return div(12, sub(8, 2))
+method operationTwo()
+	return 2 |> sub(8) |> div(12)
+method operationThree()
+	return 9 |< sub(3) |< div(2)
+
+print("div(12, sub(8, 2)) = ")
+print(oprationOne)
+
+print("2 |> sub(8) |> div(12) = ")
+print(operatingTwo)
