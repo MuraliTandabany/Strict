@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Strict.Compiler;
-using Strict.Evaluator;
+using Strict.BackEnd.Evaluator;
 using Strict.Language.Commands;
 using Strict.Machine;
 

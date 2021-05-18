@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Strict.Compiler\Strict.Compiler.csproj" />
-    <ProjectReference Include="..\Strict.Language.Evaluator\Strict.Evaluator.csproj" />
+    <ProjectReference Include="..\Strict.BackEnd.Evaluator\Strict.BackEnd.Evaluator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

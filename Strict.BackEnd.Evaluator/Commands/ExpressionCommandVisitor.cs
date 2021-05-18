@@ -1,0 +1,13 @@
+﻿using Strict.Context;
+using Strict.Language;
+using Strict.Language.Commands;
+
+namespace Strict.BackEnd.Evaluator.Commands
+{
+	public static class ExpressionCommandVisitor
+	{
+		public static void VisitCommand(ExpressionCommand expressionCommand, IVisitor visitor,
+			IContext context) =>
+			expressionCommand.Expression.Accept(visitor, context);
+	}
+}
