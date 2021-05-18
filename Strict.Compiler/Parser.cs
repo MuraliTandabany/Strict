@@ -369,6 +369,9 @@ namespace Strict.Compiler
 			CompileToken(TokenType.Separator, "(");
 			var parameters = CompileParameterExpressionList();
 			CompileToken(TokenType.Separator, ")");
+			Token returnType = null;
+			if (TryCompile(TokenType.Name, "returns"))
+				returnType = LexicalAnalyzer.NextToken();
 			var body = CompileSuite();
 			return new MethodCommand(name, parameters, body);
 		}
@@ -553,17 +556,6 @@ namespace Strict.Compiler
 			return CompileExpression();
 		}
 
-		private IExpression CompileLambdaArgumentExpression()
-		{
-			var arguments = CompileArgumentExpressionList();
-			//ICommand expressionBody = null;
-			//if (TryCompile(TokenType.Operator, "=>"))
-			//{
-			//	expressionBody = CompileSuite();
-			//}
-			return new LambdaExpression(null, arguments);
-		}
-
 		private IExpression CompileTerm()
 		{
 			var term = CompileSimpleTerm();
@@ -635,8 +627,6 @@ namespace Strict.Compiler
 			case TokenType.Operator:
 				if (token.Value == "-")
 					return new NegateExpression(CompileTerm());
-				if (token.Value == "|")
-					return CompileLambdaArgumentExpression();
 				else
 					break;
 			case TokenType.Separator:

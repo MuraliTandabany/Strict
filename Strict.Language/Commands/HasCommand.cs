@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Strict.Context;
 
 namespace Strict.Language.Commands
 {
@@ -16,6 +16,6 @@ namespace Strict.Language.Commands
 			Names = names;
 		}
 
-		public void Visitor(IContext context) => throw new NotImplementedException();
+		public void Accept(IVisitor visitor, IContext context) => visitor.Visit(this, visitor, context);
 	}
 }

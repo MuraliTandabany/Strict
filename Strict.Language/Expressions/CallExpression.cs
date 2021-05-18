@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Strict.Context;
 using Strict.Exceptions;
 
 namespace Strict.Language.Expressions
@@ -8,8 +9,8 @@ namespace Strict.Language.Expressions
 		public IExpression TargetExpression { get; }
 
 		public IList<IExpression> ArgumentExpressions { get; }
-		private bool IsObject { get; }
-		private bool HasNames { get; }
+		public bool IsObject { get; }
+		public bool HasNames { get; }
 
 		public CallExpression(IExpression targetExpression, IList<IExpression> argumentExpressions)
 		{
@@ -33,6 +34,7 @@ namespace Strict.Language.Expressions
 				}
 		}
 
-		public object Visitor(IContext context) => null;
+		public object Accept(IVisitor visitor, IContext context) =>
+			visitor.Visit(this, visitor, context);
 	}
 }

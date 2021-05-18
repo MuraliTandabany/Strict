@@ -79,50 +79,34 @@ namespace Strict.Compiler.Tests
 		[Test]
 		public void TestTokenizerChainLoop()
 		{
-			const string source = @"
-for i = 0 to 10
-    for j = 0 to 20 * i
-        for k = 0 to 30 * j
-
-print i j k";
+			const string source = "for i to 10\n\tfor j to 20 * i\n\t\tfor k to 30 * j\n\nprint i j k";
 			var lexer = new Lexer(source);
-			var nextIndentation = lexer.NextIndent();
-			Assert.That(nextIndentation, Is.EqualTo(0));
-			AssertToken(lexer.NextToken(), new Token { Value = "\r\n", TokenType = TokenType.EndOfLine });
-			nextIndentation = lexer.NextIndent();
-			Assert.That(nextIndentation, Is.EqualTo(0));
 			AssertToken(lexer.NextToken(), new Token { Value = "for", TokenType = TokenType.Name });
 			AssertToken(lexer.NextToken(), new Token { Value = "i", TokenType = TokenType.Name });
-			AssertToken(lexer.NextToken(), new Token { Value = "=", TokenType = TokenType.Operator });
-			AssertToken(lexer.NextToken(), new Token { Value = "0", TokenType = TokenType.Integer });
 			AssertToken(lexer.NextToken(), new Token { Value = "to", TokenType = TokenType.Name });
 			AssertToken(lexer.NextToken(), new Token { Value = "10", TokenType = TokenType.Integer });
-			AssertToken(lexer.NextToken(), new Token { Value = "\r\n", TokenType = TokenType.EndOfLine });
-			nextIndentation = lexer.NextIndent();
-			Assert.That(nextIndentation, Is.EqualTo(4));
+			AssertToken(lexer.NextToken(), new Token { Value = "\n", TokenType = TokenType.EndOfLine });
+			var nextIndentation = lexer.NextIndent();
+			Assert.That(nextIndentation, Is.EqualTo(1));
 			AssertToken(lexer.NextToken(), new Token { Value = "for", TokenType = TokenType.Name });
 			AssertToken(lexer.NextToken(), new Token { Value = "j", TokenType = TokenType.Name });
-			AssertToken(lexer.NextToken(), new Token { Value = "=", TokenType = TokenType.Operator });
-			AssertToken(lexer.NextToken(), new Token { Value = "0", TokenType = TokenType.Integer });
 			AssertToken(lexer.NextToken(), new Token { Value = "to", TokenType = TokenType.Name });
 			AssertToken(lexer.NextToken(), new Token { Value = "20", TokenType = TokenType.Integer });
 			AssertToken(lexer.NextToken(), new Token { Value = "*", TokenType = TokenType.Operator });
 			AssertToken(lexer.NextToken(), new Token { Value = "i", TokenType = TokenType.Name });
-			AssertToken(lexer.NextToken(), new Token { Value = "\r\n", TokenType = TokenType.EndOfLine });
+			AssertToken(lexer.NextToken(), new Token { Value = "\n", TokenType = TokenType.EndOfLine });
 			nextIndentation = lexer.NextIndent();
-			Assert.That(nextIndentation, Is.EqualTo(8));
+			Assert.That(nextIndentation, Is.EqualTo(2));
 			AssertToken(lexer.NextToken(), new Token { Value = "for", TokenType = TokenType.Name });
 			AssertToken(lexer.NextToken(), new Token { Value = "k", TokenType = TokenType.Name });
-			AssertToken(lexer.NextToken(), new Token { Value = "=", TokenType = TokenType.Operator });
-			AssertToken(lexer.NextToken(), new Token { Value = "0", TokenType = TokenType.Integer });
 			AssertToken(lexer.NextToken(), new Token { Value = "to", TokenType = TokenType.Name });
 			AssertToken(lexer.NextToken(), new Token { Value = "30", TokenType = TokenType.Integer });
 			AssertToken(lexer.NextToken(), new Token { Value = "*", TokenType = TokenType.Operator });
 			AssertToken(lexer.NextToken(), new Token { Value = "j", TokenType = TokenType.Name });
-			AssertToken(lexer.NextToken(), new Token { Value = "\r\n", TokenType = TokenType.EndOfLine });
+			AssertToken(lexer.NextToken(), new Token { Value = "\n", TokenType = TokenType.EndOfLine });
 			nextIndentation = lexer.NextIndent();
 			Assert.That(nextIndentation, Is.EqualTo(0));
-			AssertToken(lexer.NextToken(), new Token { Value = "\r\n", TokenType = TokenType.EndOfLine });
+			AssertToken(lexer.NextToken(), new Token { Value = "\n", TokenType = TokenType.EndOfLine });
 			nextIndentation = lexer.NextIndent();
 			Assert.That(nextIndentation, Is.EqualTo(0));
 			AssertToken(lexer.NextToken(), new Token { Value = "print", TokenType = TokenType.Name });

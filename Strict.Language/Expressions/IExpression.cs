@@ -1,7 +1,9 @@
-﻿namespace Strict.Language.Expressions
+﻿using Strict.Context;
+
+namespace Strict.Language.Expressions
 {
 	public interface IExpression
 	{
-		object Visitor(IContext context);
+		object Accept(IVisitor visitor, IContext context);
 	}
 }

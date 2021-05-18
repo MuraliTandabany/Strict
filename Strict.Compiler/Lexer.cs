@@ -56,6 +56,9 @@ namespace Strict.Compiler
 		private readonly Stack<Token> tokenStack = new();
 		private int LastIndentation = -1;
 
+		private int RowNumber { get; set; } = 1;
+		private int ColumnNumber { get; set; } = 1;
+
 		public Lexer(string text) =>
 			reader = text == null
 				? throw new ArgumentNullException(nameof(text))
@@ -81,8 +84,8 @@ namespace Strict.Compiler
 				LastIndentation = -1;
 				return indent;
 			}
-			int ich;
-			for (ich = NextChar(); ich >= 0 && IsSpace((char)ich); ich = NextChar())
+			var ich = NextChar();
+			for (; ich >= 0 && (char)ich == '\t'; ich = NextChar())
 				indent++;
 			PushChar(ich);
 			return indent;
@@ -127,13 +130,21 @@ namespace Strict.Compiler
 		{
 			var value = ch.ToString();
 			if (ch != '\r')
-				return new Token { TokenType = TokenType.EndOfLine, Value = value };
+				return new Token
+				{
+					TokenType = TokenType.EndOfLine, Value = value, Row = RowNumber, Column = ColumnNumber
+				};
 			var ich2 = NextChar();
 			if (ich2 < 0 || (char)ich2 != '\n')
 				PushChar(ich2);
 			else
 				value += (char)ich2;
-			return new Token { TokenType = TokenType.EndOfLine, Value = value };
+			RowNumber += 1;
+			ColumnNumber = 0;
+			return new Token
+			{
+				TokenType = TokenType.EndOfLine, Value = value, Row = RowNumber, Column = ColumnNumber
+			};
 		}
 
 		private Token NextOperator(char ch)
@@ -144,7 +155,10 @@ namespace Strict.Compiler
 				var ch2 = (char)ich2;
 				var op = ch + ch2.ToString();
 				if (OtherOperators.Contains(op))
-					return new Token { TokenType = TokenType.Operator, Value = op };
+					return new Token
+					{
+						TokenType = TokenType.Operator, Value = op, Row = RowNumber, Column = ColumnNumber
+					};
 				PushChar(ich2);
 			}
 			else
@@ -152,7 +166,13 @@ namespace Strict.Compiler
 				PushChar(ich2);
 			}
 			if (Operators.Contains(ch))
-				return new Token { TokenType = TokenType.Operator, Value = ch.ToString() };
+				return new Token
+				{
+					TokenType = TokenType.Operator,
+					Value = ch.ToString(),
+					Row = RowNumber,
+					Column = ColumnNumber
+				};
 			throw new InvalidDataException("Unknown input");
 		}
 
@@ -164,7 +184,13 @@ namespace Strict.Compiler
 			var sb = new StringBuilder();
 			var ich = NextChar();
 			if (ich < 0)
-				return new Token { Value = sb.ToString(), TokenType = TokenType.String };
+				return new Token
+				{
+					Value = sb.ToString(),
+					TokenType = TokenType.String,
+					Row = RowNumber,
+					Column = ColumnNumber
+				};
 			var ch = (char)ich;
 			if (ch == endChar)
 			{
@@ -182,7 +208,13 @@ namespace Strict.Compiler
 				if (ich >= 0)
 					ch = (char)ich;
 			}
-			return new Token { Value = sb.ToString(), TokenType = TokenType.String };
+			return new Token
+			{
+				Value = sb.ToString(),
+				TokenType = TokenType.String,
+				Row = RowNumber,
+				Column = ColumnNumber
+			};
 		}
 
 		private Token NextMultilineString(char endChar)
@@ -213,7 +245,13 @@ namespace Strict.Compiler
 					ch = (char)NextChar();
 				sb.Append(ch);
 			}
-			return new Token { Value = sb.ToString(), TokenType = TokenType.String };
+			return new Token
+			{
+				Value = sb.ToString(),
+				TokenType = TokenType.String,
+				Row = RowNumber,
+				Column = ColumnNumber
+			};
 		}
 
 		private Token NextInteger(char ch)
@@ -228,7 +266,10 @@ namespace Strict.Compiler
 			if (ich >= 0 && (char)ich == '.')
 				return NextReal(integer);
 			PushChar(ich);
-			return new Token { Value = integer, TokenType = TokenType.Integer };
+			return new Token
+			{
+				Value = integer, TokenType = TokenType.Integer, Row = RowNumber, Column = ColumnNumber
+			};
 		}
 
 		private Token NextReal(string integerPart)
@@ -241,7 +282,10 @@ namespace Strict.Compiler
 				ich = NextChar();
 			}
 			PushChar(ich);
-			return new Token { Value = real, TokenType = TokenType.Real };
+			return new Token
+			{
+				Value = real, TokenType = TokenType.Real, Row = RowNumber, Column = ColumnNumber
+			};
 		}
 
 		private Token NextName(char ch)
@@ -254,7 +298,10 @@ namespace Strict.Compiler
 				ich = NextChar();
 			}
 			PushChar(ich);
-			var token = new Token { Value = name, TokenType = TokenType.Name };
+			var token = new Token
+			{
+				Value = name, TokenType = TokenType.Name, Row = RowNumber, Column = ColumnNumber
+			};
 			if (name == "true" || name == "false")
 				token.TokenType = TokenType.Boolean;
 			return token;
@@ -273,7 +320,11 @@ namespace Strict.Compiler
 			return ich;
 		}
 
-		private void PushChar(int ch) => lastChars.Push(ch);
+		private void PushChar(int ch)
+		{
+			ColumnNumber--;
+			lastChars.Push(ch);
+		}
 
 		private int NextChar()
 		{
@@ -285,9 +336,12 @@ namespace Strict.Compiler
 			return ich;
 		}
 
-		private int NextSimpleChar() =>
-			lastChars.Count > 0
-				? lastChars.Pop()
-				: reader.Read();
+		private int NextSimpleChar()
+		{
+			if (lastChars.Count > 0)
+				return lastChars.Pop();
+			ColumnNumber++;
+			return reader.Read();
+		}
 	}
 }

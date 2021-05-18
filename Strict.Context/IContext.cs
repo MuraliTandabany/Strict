@@ -1,4 +1,4 @@
-﻿namespace Strict.Language
+﻿namespace Strict.Context
 {
 	public interface IContext : IValues
 	{

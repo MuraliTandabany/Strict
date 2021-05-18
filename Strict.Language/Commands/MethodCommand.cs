@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Strict.Context;
 using Strict.Exceptions;
 using Strict.Language.Expressions;
 
@@ -30,6 +30,6 @@ namespace Strict.Language.Commands
 			}
 		}
 
-		public void Visitor(IContext context) => throw new NotImplementedException();
+		public void Accept(IVisitor visitor, IContext context) => visitor.Visit(this, visitor, context);
 	}
 }

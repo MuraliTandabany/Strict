@@ -1,4 +1,7 @@
-﻿namespace Strict.Language.Expressions
+﻿using System;
+using Strict.Context;
+
+namespace Strict.Language.Expressions
 {
 	public class ParameterExpression : IExpression
 	{
@@ -13,6 +16,6 @@
 			IsList = isList;
 		}
 
-		public object Visitor(IContext context) => null;
+		public object Accept(IVisitor visitor, IContext context) => throw new NotImplementedException();
 	}
 }

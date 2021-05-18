@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Strict.Compiler;
+using Strict.Evaluator;
 using Strict.Language.Commands;
+using Strict.Machine;
 
 namespace Strict
 {
@@ -60,9 +62,18 @@ namespace Strict
 			Console.WriteLine(commandsJsonResult);
 		}
 
+		private static void TestCodeEvaluator(string command)
+		{
+			IStrictMachine machine = new StrictEvaluator();
+			var parser = new Parser(command);
+			var commands = parser.CompileCommandList();
+			commands.Accept(machine.Visitor, machine.Environment);
+		}
+
 		private static void Main(string[] args)
 		{
-			TestCompilationSimpleCommand("let sub = |a, b| => a - b");
+			TestCodeEvaluator("print(\"Hello\")");
+			TestCompilationSimpleCommand("for i to 20\r\n\tfor j to 20\r\n");
 			TestFiles.ParseStrictSourcesTest();
 		}
 	}

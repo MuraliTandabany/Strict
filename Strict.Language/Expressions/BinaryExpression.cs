@@ -1,4 +1,5 @@
 ﻿using System;
+using Strict.Context;
 
 namespace Strict.Language.Expressions
 {
@@ -13,6 +14,6 @@ namespace Strict.Language.Expressions
 			Right = right; // ?? throw new ArgumentNullException(nameof(right));
 		}
 
-		public object Visitor(IContext context) => null;
+		public object Accept(IVisitor visitor, IContext context) => throw new NotImplementedException();
 	}
 }

@@ -1,4 +1,7 @@
-﻿namespace Strict.Language.Expressions
+﻿using System;
+using Strict.Context;
+
+namespace Strict.Language.Expressions
 {
 	public class IndexedExpression : IExpression
 	{
@@ -11,6 +14,6 @@
 			IndexExpression = indexExpression;
 		}
 
-		public object Visitor(IContext context) => null;
+		public object Accept(IVisitor visitor, IContext context) => throw new NotImplementedException();
 	}
 }

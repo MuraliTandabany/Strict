@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Strict.Context;
 using Strict.Language.Expressions;
 
 namespace Strict.Language.Commands
@@ -8,6 +8,6 @@ namespace Strict.Language.Commands
 		public IExpression Expression { get; }
 		public ExpressionCommand(IExpression expression) => Expression = expression;
 
-		public void Visitor(IContext context) => throw new NotImplementedException();
+		public void Accept(IVisitor visitor, IContext context) => Expression.Accept(visitor, context);
 	}
 }

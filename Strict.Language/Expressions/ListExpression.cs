@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Strict.Context;
 
 namespace Strict.Language.Expressions
 {
@@ -15,6 +17,6 @@ namespace Strict.Language.Expressions
 			IsReadonly = isReadonly;
 		}
 
-		public object Visitor(IContext context) => null;
+		public object Accept(IVisitor visitor, IContext context) => throw new NotImplementedException();
 	}
 }
