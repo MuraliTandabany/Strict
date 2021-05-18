@@ -7,7 +7,7 @@ namespace Strict.Language.Expressions
 	public class CompareExpression : BinaryExpression
 	{
 		public ComparisonOperator Operation { get; }
-		public Func<object, object, bool, object> Function { get; private set; }
+		public Func<object, object, bool, object> Function { get; }
 
 		public CompareExpression(ComparisonOperator operation, IExpression left, IExpression right) :
 			base(left, right)

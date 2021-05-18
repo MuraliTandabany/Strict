@@ -14,11 +14,11 @@ namespace Strict.Evaluator.Utilities
 				return value.ToString();
 			var text = (string)value;
 			if (text.IndexOf('\'') < 0)
-				return string.Format("'{0}'", text);
+				return $"'{text}'";
 			if (text.IndexOf('"') < 0)
-				return string.Format("\"{0}\"", text);
+				return $"\"{text}\"";
 			text = text.Replace("'", "\\'");
-			return string.Format("'{0}'", text);
+			return $"'{text}'";
 		}
 
 		public static string AsPrintString(object value)

@@ -60,7 +60,6 @@ namespace Strict.Evaluator
 		public object Visit(BooleanExpression booleanExpression, IVisitor visitor, IContext context) =>
 			BooleanExpressionVisitor.VisitExpression(booleanExpression, visitor, context);
 
-
 		public object Visit(CompareExpression compareExpression, IVisitor visitor, IContext context) =>
 			CompareExpressionVisitor.VisitExpression(compareExpression, visitor, context);
 	}
