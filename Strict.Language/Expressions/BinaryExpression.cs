@@ -3,7 +3,7 @@ using Strict.Context;
 
 namespace Strict.Language.Expressions
 {
-	public class BinaryExpression : IExpression
+	public abstract class BinaryExpression : IExpression
 	{
 		public IExpression Left { get; }
 		public IExpression Right { get; }
@@ -14,6 +14,6 @@ namespace Strict.Language.Expressions
 			Right = right; // ?? throw new ArgumentNullException(nameof(right));
 		}
 
-		public object Accept(IVisitor visitor, IContext context) => throw new NotImplementedException();
+		public abstract object Accept(IVisitor visitor, IContext context);
 	}
 }

@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Strict.Context;
+using Strict.Language;
 
 namespace Strict.Machine
 {
 	public class StrictEnvironment : IContext
 	{
-		private IContext Parent { get; }
-		private Dictionary<string, object> Values { get; } = new();
-		private object ReturnValue { get; set; }
-		private bool HasReturnValue { get; set; }
+		public IContext Parent { get; }
+		public Dictionary<string, object> Values { get; } = new();
+		public object ReturnValue { get; set; }
+		public bool HasReturnValue { get; set; }
+		public IVisitor Visitor { get; set; }
 
 		public StrictEnvironment() { }
 

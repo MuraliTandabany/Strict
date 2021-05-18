@@ -21,5 +21,11 @@ namespace Strict.Language
 		object Visit(AttributeExpression attributeExpression, IVisitor visitor, IContext context);
 		object Visit(CallExpression callExpression, IVisitor visitor, IContext context);
 		object Visit(NameExpression nameExpression, IVisitor visitor, IContext context);
+
+		object Visit(BinaryOperatorExpression binaryOperatorExpression, IVisitor visitor,
+			IContext context);
+
+		object Visit(BooleanExpression booleanExpression, IVisitor visitor, IContext context);
+		object Visit(CompareExpression compareExpression, IVisitor visitor, IContext context);
 	}
 }

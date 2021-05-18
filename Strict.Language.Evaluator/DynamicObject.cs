@@ -2,8 +2,9 @@
 using System.Linq;
 using Strict.Context;
 using Strict.Exceptions;
+using Strict.Language;
 
-namespace Strict.Language
+namespace Strict.Evaluator
 {
 	public class DynamicObject : IObject
 	{

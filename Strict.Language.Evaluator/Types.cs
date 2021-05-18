@@ -1,6 +1,7 @@
 ﻿using System.Collections;
+using Strict.Language;
 
-namespace Strict.Language
+namespace Strict.Evaluator
 {
 	public class Types
 	{

@@ -52,5 +52,16 @@ namespace Strict.Evaluator
 
 		public object Visit(NameExpression nameExpression, IVisitor visitor, IContext context) =>
 			NameExpressionVisitor.VisitExpression(nameExpression, visitor, context);
+
+		public object Visit(BinaryOperatorExpression binaryOperatorExpression, IVisitor visitor,
+			IContext context) =>
+			BinaryOperatorExpressionVisitor.VisitExpression(binaryOperatorExpression, visitor, context);
+
+		public object Visit(BooleanExpression booleanExpression, IVisitor visitor, IContext context) =>
+			BooleanExpressionVisitor.VisitExpression(booleanExpression, visitor, context);
+
+
+		public object Visit(CompareExpression compareExpression, IVisitor visitor, IContext context) =>
+			CompareExpressionVisitor.VisitExpression(compareExpression, visitor, context);
 	}
 }

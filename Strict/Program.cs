@@ -73,6 +73,7 @@ namespace Strict
 		private static void Main(string[] args)
 		{
 			TestCodeEvaluator("print(\"Hello\")");
+			TestCodeEvaluator("print(20*5)");
 			TestCompilationSimpleCommand("for i to 20\r\n\tfor j to 20\r\n");
 			TestFiles.ParseStrictSourcesTest();
 		}

@@ -5,7 +5,7 @@ namespace Strict.Language.Commands
 {
 	public class ForCommand : ICommand
 	{
-		private string Name { get; }
+		public string Name { get; }
 		public IExpression Expression { get; }
 		public ICommand Command { get; }
 

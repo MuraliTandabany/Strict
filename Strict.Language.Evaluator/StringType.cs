@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Strict.Exceptions;
+using Strict.Language;
 
-namespace Strict.Language
+namespace Strict.Evaluator
 {
 	public class StringType : IType
 	{

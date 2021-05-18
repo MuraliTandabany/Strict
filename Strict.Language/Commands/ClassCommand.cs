@@ -9,6 +9,7 @@ namespace Strict.Language.Commands
 		public string Name { get; }
 		public ICommand Body { get; }
 		public IList<IExpression> InheritancesExpressions { get; }
+		public string Doc { get; }
 
 		public ClassCommand(string name, ICommand body) : this(name, null, body) { }
 
@@ -17,6 +18,7 @@ namespace Strict.Language.Commands
 			Name = name;
 			Body = body;
 			InheritancesExpressions = inheritancesExpressions;
+			Doc = CommandUtilities.GetDocString(Body);
 		}
 
 		public void Accept(IVisitor visitor, IContext context) => visitor.Visit(this, visitor, context);
