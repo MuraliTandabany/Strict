@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Strict.Context;
 using Strict.BackEnd.Evaluator.Functions;
+using Strict.Context;
 using Strict.Language;
 
 namespace Strict.BackEnd.Evaluator.Utilities

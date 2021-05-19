@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Strict.Context;
 using Strict.BackEnd.Evaluator.Utilities;
+using Strict.Context;
 using Strict.Language;
 
 namespace Strict.BackEnd.Evaluator.Functions
