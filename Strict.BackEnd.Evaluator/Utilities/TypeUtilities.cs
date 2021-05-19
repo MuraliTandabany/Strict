@@ -33,19 +33,17 @@ namespace Strict.BackEnd.Evaluator.Utilities
 			if (type != null)
 				return type;
 			type = GetTypeFromPartialNamedAssembly(name);
-			if (type == null)
-			{
-				LoadReferencedAssemblies();
-				type = GetTypeFromLoadedAssemblies(name);
-				return type ?? null;
-			}
+			if (type != null)
+				return type;
+			LoadReferencedAssemblies();
+			type = GetTypeFromLoadedAssemblies(name);
 			return type;
 		}
 
 		public static Type GetType(string name) =>
 			AsType(name) ?? throw new InvalidOperationException($"Unknown type '{name}'");
 
-		public static ICollection<Type> GetTypesByNamespace(string @namespace)
+		public static List<Type> GetTypesByNamespace(string @namespace)
 		{
 			LoadReferencedAssemblies();
 			return AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly =>
@@ -54,7 +52,7 @@ namespace Strict.BackEnd.Evaluator.Utilities
 
 		public static bool IsNamespace(string name) => GetNamespaces().Contains(name);
 
-		public static IList<string> GetNames(Type type) =>
+		public static List<string> GetNames(Type type) =>
 			type.GetMembers(BindingFlags.Public | BindingFlags.Instance).Select(m => m.Name).ToList();
 
 		public static object GetValue(Type type, string name)
@@ -105,7 +103,7 @@ namespace Strict.BackEnd.Evaluator.Utilities
 
 		private static Type GetTypeFromPartialNamedAssembly(string name)
 		{
-			var p = name.LastIndexOf(".");
+			var p = name.LastIndexOf(".", StringComparison.Ordinal);
 			if (p < 0)
 				return null;
 			var assemblyName = name.Substring(0, p);

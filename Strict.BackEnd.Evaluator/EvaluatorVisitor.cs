@@ -37,8 +37,8 @@ namespace Strict.BackEnd.Evaluator
 			Visit(SetAttributeCommand setAttributeCommand, IVisitor visitor, IContext context) =>
 			SetAttributeCommandVisitor.VisitCommand(setAttributeCommand, visitor, context);
 
-		public void Visit(SetCommand setCommand, IVisitor visitor, IContext context) =>
-			SetCommandVisitor.VisitCommand(setCommand, visitor, context);
+		public void Visit(LetCommand letCommand, IVisitor visitor, IContext context) =>
+			LetCommandVisitor.VisitCommand(letCommand, visitor, context);
 
 		public void Visit(WhileCommand whileCommand, IVisitor visitor, IContext context) =>
 			WhileCommandVisitor.VisitCommand(whileCommand, visitor, context);

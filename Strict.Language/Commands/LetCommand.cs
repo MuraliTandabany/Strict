@@ -4,13 +4,13 @@ using Strict.Language.Expressions;
 
 namespace Strict.Language.Commands
 {
-	public class SetCommand : ICommand
+	public class LetCommand : ICommand
 	{
 		public string Target { get; }
 
 		public IExpression Expression { get; }
 
-		public SetCommand(string target, IExpression expression)
+		public LetCommand(string target, IExpression expression)
 		{
 			Target = target ?? throw new ArgumentNullException(nameof(target));
 			Expression = expression ?? throw new ArgumentNullException(nameof(expression));

@@ -6,7 +6,7 @@ namespace Strict.Language.Commands
 	public class HasCommand : ICommand
 	{
 		public string ModuleName { get; }
-		public ICollection<string> Names { get; }
+		public IList<string> Names { get; }
 
 		public HasCommand(string name) : this(name, null) { }
 

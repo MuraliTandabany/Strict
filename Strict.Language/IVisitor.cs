@@ -15,7 +15,7 @@ namespace Strict.Language
 		void Visit(MethodCommand methodCommand, IVisitor visitor, IContext context);
 		void Visit(ReturnCommand returnCommand, IVisitor visitor, IContext context);
 		void Visit(SetAttributeCommand setAttributeCommand, IVisitor visitor, IContext context);
-		void Visit(SetCommand setCommand, IVisitor visitor, IContext context);
+		void Visit(LetCommand letCommand, IVisitor visitor, IContext context);
 		void Visit(WhileCommand whileCommand, IVisitor visitor, IContext context);
 
 		object Visit(AttributeExpression attributeExpression, IVisitor visitor, IContext context);

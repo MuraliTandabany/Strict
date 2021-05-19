@@ -235,7 +235,7 @@ namespace Strict.Compiler
 		private ICommand CompileNameExpression(ExpressionCommand expressionCommand,
 			IExpression valueExpression)
 		{
-			var command = new SetCommand(((NameExpression)expressionCommand.Expression).Name,
+			var command = new LetCommand(((NameExpression)expressionCommand.Expression).Name,
 				valueExpression);
 			CompileEndOfCommand();
 			return command;
@@ -361,7 +361,7 @@ namespace Strict.Compiler
 			var command = CompileSuite();
 			return new WhileCommand(condition, command);
 		}
-
+		
 		private ICommand CompileMethodCommand()
 		{
 			var token = CompileName(true);
