@@ -4,8 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
-using Strict.Compiler;
 using Strict.BackEnd.Evaluator;
+using Strict.Compiler;
 using Strict.Language.Commands;
 using Strict.Machine;
 

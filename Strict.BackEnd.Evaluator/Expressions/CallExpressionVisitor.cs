@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Strict.Context;
 using Strict.BackEnd.Evaluator.Utilities;
+using Strict.Context;
 using Strict.Language;
 using Strict.Language.Expressions;
 

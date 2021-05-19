@@ -1,5 +1,4 @@
-﻿using System;
-using Strict.Context;
+﻿using Strict.Context;
 using Strict.Language;
 using Strict.Language.Commands;
 

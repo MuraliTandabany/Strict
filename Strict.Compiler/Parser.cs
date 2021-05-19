@@ -361,7 +361,7 @@ namespace Strict.Compiler
 			var command = CompileSuite();
 			return new WhileCommand(condition, command);
 		}
-		
+
 		private ICommand CompileMethodCommand()
 		{
 			var token = CompileName(true);

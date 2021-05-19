@@ -1,6 +1,6 @@
-﻿using Strict.Context;
-using Strict.BackEnd.Evaluator.Commands;
+﻿using Strict.BackEnd.Evaluator.Commands;
 using Strict.BackEnd.Evaluator.Expressions;
+using Strict.Context;
 using Strict.Language;
 using Strict.Language.Commands;
 using Strict.Language.Expressions;
